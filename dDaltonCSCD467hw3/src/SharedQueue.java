@@ -1,29 +1,28 @@
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class SharedQueue {
     private class Node {
-        private Object data;
+        private String data;
         private Node next;
 
-        public Node(Object inputObject) {
-            this.data = inputObject;
+        public Node(String inputString) {
+            this.data = inputString;
             this.next = null;
         }
     }
     private Node headNode, tailNode;
     private int currentSize;
     private int maxSize;
+    private Boolean isDoneReading;
 
     public SharedQueue(int maxSize) {
         this.headNode = null;
         this.tailNode = null;
         this.currentSize = 0;
         this.maxSize = maxSize;
+        this.isDoneReading = false;
     }
 
-    public synchronized void enqueue(Object inputObject) {
+    public synchronized void enqueue(String inputString) {
         // Check if the queue has reached MaxSize
         while (this.currentSize >= this.maxSize) {
             try {
@@ -35,7 +34,7 @@ public class SharedQueue {
             }
         }
 
-        Node newNode = new Node(inputObject);
+        Node newNode = new Node(inputString);
 
         if (this.currentSize == 0) {
             this.headNode = newNode;
@@ -44,14 +43,12 @@ public class SharedQueue {
         }
 
         this.tailNode = newNode;
-        this,.currentSize++;
-
-        System.out.println("Produced " + val + "!" );
+        this.currentSize++;
 
         notifyAll();
     }
 
-    public synchronized Object dequeue() {
+    public synchronized String dequeue() {
         while (isEmpty()) {
             try {
                 System.out.println("Queue is Empty");
@@ -62,7 +59,7 @@ public class SharedQueue {
             }
         }
 
-        Object outpuObject = this.headNode.data;
+        String outputString = this.headNode.data;
         this.headNode = this.headNode.next;
         this.currentSize--;
 
@@ -71,7 +68,7 @@ public class SharedQueue {
         }
 
         notify();
-        return outpuObject;
+        return outputString;
     }
 
     public synchronized boolean isEmpty() {
@@ -79,6 +76,15 @@ public class SharedQueue {
             return true;
         }
         return false;
+    }
+
+    public synchronized void setDoneReading(Boolean doneReading) {
+        this.isDoneReading = doneReading;
+        notifyAll();
+    }
+
+    public synchronized Boolean getDoneReading() {
+        return this.isDoneReading;
     }
 
 }
