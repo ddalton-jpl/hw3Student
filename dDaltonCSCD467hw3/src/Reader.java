@@ -7,9 +7,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Reader extends Thread {
-    BufferedReader reader;
-    String fileName;
-    SharedQueue queue;
+    private BufferedReader reader;
+    private String fileName;
+    private SharedQueue queue;
 
     public Reader(String inputFileName, SharedQueue inputQueue) {
         this.fileName = inputFileName;
@@ -23,9 +23,7 @@ public class Reader extends Thread {
                     new FileReader(this.fileName));
             String line = reader.readLine();
             while (line != null) {
-                if (!line.trim().isEmpty()) {
-                    queue.enqueue(line);
-                }
+                queue.enqueue(line);
                 line = reader.readLine();
             }
             this.queue.setDoneReading(true);

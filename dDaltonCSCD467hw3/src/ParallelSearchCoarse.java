@@ -2,13 +2,13 @@
 public class ParallelSearchCoarse {
 
 	public static void main(String args[]) throws InterruptedException {
-		// if( args.length < 2) {
-		// 	System.out.println("Usage: Java ParallelSearchCoarse FileName Pattern");
-		// 	System.exit(0);
-		// }
+		if( args.length < 2) {
+			System.out.println("Usage: Java ParallelSearchCoarse FileName Pattern");
+			System.exit(0);
+		}
 		// TODO REMOVE DEBUG FILES
-		String fname = "dDaltonCSCD467hw3/files/wikipedia2text-extracted.txt";         // fileName = files/wikipedia2text-extracted.txt
-		String pattern = "(John) (.+?) ";      // pattern = "(John) (.+?) ";
+		String fname = args[0];         // fileName = files/wikipedia2text-extracted.txt
+		String pattern = args[1];      // pattern = "(John) (.+?) ";
 		long start = System.currentTimeMillis();
 		
 		// Create your thread reader and searcher here

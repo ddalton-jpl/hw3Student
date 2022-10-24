@@ -2,11 +2,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Searcher extends Thread {
-    // TODO figure out what the valid maxSize is
-    SharedQueue queue;
-    int currentRow = 0;
-    int totalFound = 0;
-    String pattern;
+    private SharedQueue queue;
+    private String pattern;
 
     public Searcher(String inputPattern, SharedQueue inputQueue) {
         this.pattern = inputPattern;
@@ -14,8 +11,10 @@ public class Searcher extends Thread {
     }
 
     public void run() {
+        int currentRow = 0;
+        int totalFound = 0;
         try {
-            while (this.queue.isEmpty() == false && this.queue.getDoneReading() == false) {
+            while (queue.getDoneReading() == false || queue.isEmpty() == false) {
                 String line = this.queue.dequeue();
 
                 Pattern pattern = Pattern.compile(this.pattern);
@@ -24,17 +23,19 @@ public class Searcher extends Thread {
                 int count = 0;
                 while (matcher.find()) {
                     count++;
-                    System.out.println("found: " + count + " : " + matcher.start() + " - " + matcher.end());
+                    // System.out.println("found: " + count + " : " + matcher.start() + " - " + matcher.end());
                 }
 
-                this.totalFound += count;
-                this.currentRow++;
+                totalFound += count;
+                currentRow++;
             }
-
-            System.out.println("Total number of lines searched is " + this.currentRow);
-            System.out.println("Total occurance of pattern " + this.pattern + "is " + this.totalFound);
         } catch (Exception e) {
             System.err.println(e.toString());
+        }
+
+        if (this.queue.getDoneReading() == true) {
+            System.out.println("Total number of lines searched is " + currentRow);
+            System.out.println("Total occurance of pattern " + this.pattern + "is " + totalFound);
         }
     }
 
