@@ -3,9 +3,10 @@ public class ParallelSearchCoarse {
 
 	public static void main(String args[]) throws InterruptedException {
 		if( args.length < 2) {
-			System.out.println("Usage: Java ParallelSearchCoarse FileName Pattern");
+			System.out.println("Usage: Java ParallelSearchCoarse FileName Pattern. Please add arguments for FILENAME and PATTERN");
 			System.exit(0);
 		}
+
 		// TODO REMOVE DEBUG FILES
 		String fname = args[0];         // fileName = files/wikipedia2text-extracted.txt
 		String pattern = args[1];      // pattern = "(John) (.+?) ";

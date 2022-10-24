@@ -23,7 +23,9 @@ public class Reader extends Thread {
                     new FileReader(this.fileName));
             String line = reader.readLine();
             while (line != null) {
-                queue.enqueue(line);
+                if (!line.trim().isEmpty()) {
+                    queue.enqueue(line);
+                }
                 line = reader.readLine();
             }
             this.queue.setDoneReading(true);
