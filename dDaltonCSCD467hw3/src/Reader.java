@@ -17,7 +17,7 @@ public class Reader extends Thread {
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         try {
             reader = new BufferedReader(
                     new FileReader(this.fileName));
@@ -28,16 +28,12 @@ public class Reader extends Thread {
                 }
                 line = reader.readLine();
             }
-            queue.setDoneReading(true);
+            this.queue.setDoneReading(true);
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-    }
-
-    public void setFileName(String fname) {
-        this.fileName = fname;
     }
 
 }

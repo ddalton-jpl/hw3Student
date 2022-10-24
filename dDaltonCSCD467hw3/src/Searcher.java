@@ -1,7 +1,7 @@
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Searcher extends Thread{
+public class Searcher extends Thread {
     // TODO figure out what the valid maxSize is
     SharedQueue queue;
     int currentRow = 0;
@@ -14,31 +14,28 @@ public class Searcher extends Thread{
     }
 
     public void run() {
-        searchPattern();
-    }
+        try {
+            while (this.queue.isEmpty() == false && this.queue.getDoneReading() == false) {
+                String line = this.queue.dequeue();
 
-    // Search a text file for a pattern
-	public synchronized int searchPattern(){
-        while (queue.isEmpty() == false && queue.getDoneReading() == false) {
-            String line = queue.dequeue();
-            totalFound += searchLine(line, this.pattern);
-            currentRow ++;
+                Pattern pattern = Pattern.compile(this.pattern);
+                Matcher matcher = pattern.matcher(line);
+
+                int count = 0;
+                while (matcher.find()) {
+                    count++;
+                    System.out.println("found: " + count + " : " + matcher.start() + " - " + matcher.end());
+                }
+
+                this.totalFound += count;
+                this.currentRow++;
+            }
+
+            System.out.println("Total number of lines searched is " + this.currentRow);
+            System.out.println("Total occurance of pattern " + this.pattern + "is " + this.totalFound);
+        } catch (Exception e) {
+            System.err.println(e.toString());
         }
-        System.out.println("Total number of lines searched is " + currentRow);
-        return totalFound;
-	}//end of searchPattern
-	
-	public synchronized static int searchLine(String line, String patt){
-		Pattern pattern = Pattern.compile(patt);
-		Matcher matcher = pattern.matcher(line);
-
-		int count = 0;
-		while(matcher.find()) {
-		    count++;
-		    System.out.println("found: " + count + " : " + matcher.start() + " - " + matcher.end());
-		}
-		return count;
-	}
-
+    }
 
 }

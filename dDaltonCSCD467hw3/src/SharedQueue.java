@@ -22,13 +22,19 @@ public class SharedQueue {
         this.isDoneReading = false;
     }
 
+    public synchronized boolean isEmpty() {
+        if ((this.headNode == null) && (this.tailNode == null) || (this.currentSize == 0)) {
+            return true;
+        }
+        return false;
+    }
+
     public synchronized void enqueue(String inputString) {
         // Check if the queue has reached MaxSize
         while (this.currentSize >= this.maxSize) {
             try {
                 wait();
             } catch (InterruptedException e) {
-                System.out.println("Error in enqueue wait");
                 e.printStackTrace();
             }
         }
@@ -53,7 +59,6 @@ public class SharedQueue {
                 System.out.println("Queue is Empty");
                 wait();
             } catch (InterruptedException e) {
-                System.out.println("Error in dequeue");
                 e.printStackTrace();
             }
         }
@@ -68,20 +73,6 @@ public class SharedQueue {
 
         notify();
         return outputString;
-    }
-
-    public synchronized boolean isEmpty() {
-        if ((this.headNode == null) && (this.tailNode == null) || (this.currentSize == 0)) {
-            return true;
-        }
-        return false;
-    }
-
-    public synchronized boolean isFull() {
-        if (this.currentSize == this.maxSize) {
-            return true;
-        }
-        return false;
     }
 
     public synchronized void setDoneReading(Boolean doneReading) {
