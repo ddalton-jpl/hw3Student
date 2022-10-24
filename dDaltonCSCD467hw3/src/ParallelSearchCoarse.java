@@ -1,23 +1,25 @@
 
 public class ParallelSearchCoarse {
-	private static Object reader;
 
 	public static void main(String args[]) throws InterruptedException {
-		if( args.length < 2) {
-			System.out.println("Usage: Java ParallelSearchCoarse FileName Pattern");
-			System.exit(0);
-		}
-		
-		String fname = args[0];         // fileName = files/wikipedia2text-extracted.txt
-		String pattern = args[1];       // pattern = "(John) (.+?) ";
+		// if( args.length < 2) {
+		// 	System.out.println("Usage: Java ParallelSearchCoarse FileName Pattern");
+		// 	System.exit(0);
+		// }
+		// TODO REMOVE DEBUG FILES
+		String fname = "dDaltonCSCD467hw3/testfile2.txt";         // fileName = files/wikipedia2text-extracted.txt
+		String pattern = "(John) (.+?) ";      // pattern = "(John) (.+?) ";
 		long start = System.currentTimeMillis();
 		
 		// Create your thread reader and searcher here
-		// TODO
+		SharedQueue queue = new SharedQueue(1);
+		Reader reader = new Reader(fname, queue);
+		Searcher searcher = new Searcher(pattern, queue);
+		reader.start();
+		searcher.start();
 
-		
-		// ((Object) reader).join();
-		// searcher.join();
+		reader.join();
+		searcher.join();
 		long end = System.currentTimeMillis();
 		System.out.println("Time cost for concurrent solution is " + (end - start));
 		

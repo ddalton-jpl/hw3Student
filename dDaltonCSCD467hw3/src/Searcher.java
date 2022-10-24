@@ -3,17 +3,18 @@ import java.util.regex.Pattern;
 
 public class Searcher extends Thread{
     // TODO figure out what the valid maxSize is
-    SharedQueue queue = new SharedQueue(10);
+    SharedQueue queue;
     int currentRow = 0;
     int totalFound = 0;
     String pattern;
 
-    public void run() {
-        searchPattern();
+    public Searcher(String inputPattern, SharedQueue inputQueue) {
+        this.pattern = inputPattern;
+        this.queue = inputQueue;
     }
 
-    public synchronized void setPattern(String inputPattern) {
-        this.pattern = inputPattern;
+    public void run() {
+        searchPattern();
     }
 
     // Search a text file for a pattern
@@ -34,7 +35,7 @@ public class Searcher extends Thread{
 		int count = 0;
 		while(matcher.find()) {
 		    count++;
-		    //System.out.println("found: " + count + " : " + matcher.start() + " - " + matcher.end());
+		    System.out.println("found: " + count + " : " + matcher.start() + " - " + matcher.end());
 		}
 		return count;
 	}

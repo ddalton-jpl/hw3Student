@@ -6,10 +6,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Reader implements Runnable {
+public class Reader extends Thread {
     BufferedReader reader;
-    SharedQueue queue = new SharedQueue(10);
     String fileName;
+    SharedQueue queue;
+
+    public Reader(String inputFileName, SharedQueue inputQueue) {
+        this.fileName = inputFileName;
+        this.queue = inputQueue;
+    }
 
     @Override
     public void run() {
@@ -18,7 +23,9 @@ public class Reader implements Runnable {
                     new FileReader(this.fileName));
             String line = reader.readLine();
             while (line != null) {
-                queue.enqueue(line);
+                if (!line.trim().isEmpty()) {
+                    queue.enqueue(line);
+                }
                 line = reader.readLine();
             }
             queue.setDoneReading(true);
